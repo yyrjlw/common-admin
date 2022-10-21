@@ -3,12 +3,14 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from "@nestjs/common";
 import { ResultMsg } from "src/model/result-msg.model";
 import { FastifyReply } from "fastify";
 import { ConfigService } from "src/config/config.service";
 
 export class GlobalExceptionFilter implements ExceptionFilter {
+  private readonly _log = new Logger(GlobalExceptionFilter.name);
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
@@ -26,7 +28,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     });
 
     if (code >= 500) {
-      //this.log.error(exception, GlobalExceptionFilter.name);
+      this._log.error(exception, GlobalExceptionFilter.name);
     }
 
     response.status(code).send(responseData);

@@ -3,19 +3,13 @@ import {
   LoggerService as NestLoggerService,
   LogLevel,
 } from "@nestjs/common";
-import pino, { Logger } from "pino";
 import { ConfigService } from "src/config/config.service";
 
 @Injectable()
 export class LoggerService implements NestLoggerService {
-  constructor(private readonly configService: ConfigService) {
-    this._log = pino({
-      level: this.configService.get("logLevel"),
-      timestamp: false,
-      prettifier: require("pino-colada"),
-    });
-  }
+  constructor(private readonly configService: ConfigService) {}
 
+  //TODO 日志适配器
   _log: Logger;
 
   log(message: any, ...optionalParams: any[]) {
