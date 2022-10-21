@@ -3,15 +3,15 @@ import { join } from "path";
 
 export function importModules(rootPath: string, deep = false) {
   function finder(path: string) {
-    const files = [];
+    const files: string[] = [];
     const dir = readdirSync(path);
     for (const item of dir) {
       const fullPath = join(path, item);
       const fileStat = statSync(fullPath);
       if (existsSync(fullPath)) {
-        if (fileStat.isDirectory && deep) {
+        if (fileStat.isDirectory() && deep) {
           files.push(...finder(fullPath));
-        } else if (fileStat.isFile() && item.endsWith(".js")) {
+        } else if (fileStat.isFile() && /\.(js|ts)$/.test(item)) {
           files.push(fullPath.replace("\\", "/"));
         }
       }
