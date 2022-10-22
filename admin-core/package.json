@@ -4,14 +4,27 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon",
-    "build": "nest build"
+    "build": "nest build",
+    "start-dist": "node dist/main.js",
+    "migration:create": "mikro-orm migration:create",
+    "migration:up": "mikro-orm migration:up",
+    "initDB": "mikro-orm migration:fresh --seed"
   },
   "dependencies": {
+    "@mikro-orm/cli": "^5.4.2",
+    "@mikro-orm/core": "^5.4.2",
+    "@mikro-orm/migrations": "^5.4.2",
+    "@mikro-orm/mysql": "^5.4.2",
+    "@mikro-orm/nestjs": "^5.1.2",
+    "@mikro-orm/reflection": "^5.4.2",
+    "@mikro-orm/seeder": "^5.4.2",
+    "@mikro-orm/sql-highlighter": "^1.0.1",
     "@nestjs/common": "^9.1.2",
     "@nestjs/core": "^9.1.2",
     "@nestjs/platform-fastify": "^9.1.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "md5": "^2.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.7",
     "yaml": "^2.1.3"
@@ -25,5 +38,12 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }

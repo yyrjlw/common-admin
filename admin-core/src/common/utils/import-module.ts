@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
+/** 自动导入指定目录下的所有export default模块 */
 export function importModules(rootPath: string, deep = false) {
   function finder(path: string) {
     const files: string[] = [];
@@ -11,7 +12,8 @@ export function importModules(rootPath: string, deep = false) {
       if (existsSync(fullPath)) {
         if (fileStat.isDirectory() && deep) {
           files.push(...finder(fullPath));
-        } else if (fileStat.isFile() && /\.(js|ts)$/.test(item)) {
+          //排除非js和ts文件
+        } else if (fileStat.isFile() && /((?<!\.d)\.ts|\.js)$/.test(item)) {
           files.push(fullPath.replace("\\", "/"));
         }
       }

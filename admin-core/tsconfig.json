@@ -17,8 +17,12 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
+    "declaration": true,
     "paths": {
       "src/*": ["src/*"]
     }
+  },
+  "ts-node": {
+    "transpileOnly": true
   }
 }

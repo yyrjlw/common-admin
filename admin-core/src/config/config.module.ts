@@ -7,13 +7,14 @@ import YAML from "yaml";
 import { validateOrReject } from "class-validator";
 import { join } from "node:path";
 import { CONFIG_MODEL } from "./config.constants";
+import { cwd } from "node:process";
 
 const configModel: FactoryProvider = {
   provide: CONFIG_MODEL,
   async useFactory() {
     const configFile = readFileSync(
       join(
-        __dirname,
+        cwd(),
         `config${!ConfigService.isDevelopment ? ".production" : ""}.yml`
       ),
       { encoding: "utf-8" }

@@ -1,7 +1,7 @@
 import { Controller, Get } from "@nestjs/common";
 
-@Controller("account")
-export default class AccountController {
+@Controller("auth")
+export default class AuthController {
   @Get()
   getHello() {
     return "hello";

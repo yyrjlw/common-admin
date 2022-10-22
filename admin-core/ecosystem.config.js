@@ -16,11 +16,11 @@ module.exports = {
 
       merge_logs: true, // 设置追加日志而不是新建日志
 
-      log_date_format: "YYYY-MM-DD HH:mm:ss", // 指定日志文件的时间格式
+      time: false, // 禁用日志时间
 
       min_uptime: "60s", // 应用运行少于时间被认为是异常启动
 
-      max_restarts: 30, // 最大异常重启次数
+      max_restarts: 10, // 最大异常重启次数
 
       restart_delay: 60, // 异常重启情况下，延时重启时间
       env: {

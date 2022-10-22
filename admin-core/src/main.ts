@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import {
   FastifyAdapter,
@@ -7,23 +8,24 @@ import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
 import { HttpLoggingMiddleware } from "./common/middleware/http-logging.middleware";
 import { ConfigService } from "./config/config.service";
-import { LoggerService } from "./share/service/logger.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
-    { bufferLogs: true }
+    new FastifyAdapter()
   );
-  //自定义日志Service
-  const log = app.get(LoggerService);
-  app.useLogger(log);
+  const configService = app.get(ConfigService);
+
+  //设置日志级别
+  app.useLogger(configService.get("logLevel"));
+  const log = new Logger(bootstrap.name);
   //打印请求日志
   app.use(HttpLoggingMiddleware);
   //转换api异常响应
   app.useGlobalFilters(new GlobalExceptionFilter());
+  //设置全局api前缀
+  app.setGlobalPrefix("api");
 
-  const configService = app.get(ConfigService);
   const port = configService.get("port");
 
   await app.listen(port);
