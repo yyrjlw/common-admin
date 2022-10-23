@@ -6,6 +6,7 @@ import {
 } from "@nestjs/platform-fastify";
 import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filter/global-exception.filter";
+import { ApiTransformInterceptor } from "./common/interceptor/api-response-transform.interceptor";
 import { HttpLoggingMiddleware } from "./common/middleware/http-logging.middleware";
 import { ConfigService } from "./config/config.service";
 
@@ -25,6 +26,8 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
   //设置全局api前缀
   app.setGlobalPrefix("api");
+  //统一API返回结果类型
+  app.useGlobalInterceptors(new ApiTransformInterceptor());
 
   const port = configService.get("port");
 
