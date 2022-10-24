@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Logger,
 } from "@nestjs/common";
-import { ResultMsg } from "src/model/result-msg.model";
+import { ResultMsg } from "src/models/result-msg";
 import { FastifyReply } from "fastify";
 import { ConfigService } from "src/config/config.service";
 
@@ -28,7 +28,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     });
 
     if (code >= 500) {
-      this._log.error(exception, GlobalExceptionFilter.name);
+      this._log.error(exception.message, exception.stack);
     }
 
     response.status(code).send(responseData);

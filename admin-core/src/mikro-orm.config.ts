@@ -15,8 +15,8 @@ export default {
   port: 3306,
   charset: "utf8mb4",
   timezone: "+08:00",
-  entities: ["dist/model/entity/**/*.js"],
-  entitiesTs: ["src/model/entity/**/*.ts"],
+  entities: ["dist/models/entity/**/*.js"],
+  entitiesTs: ["src/models/entity/**/*.ts"],
   metadataProvider: TsMorphMetadataProvider,
   namingStrategy: UnderscoreNamingStrategy, //小写加下划线命名策略
   forceUndefined: true, //将空值映射为undefined

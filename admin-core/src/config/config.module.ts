@@ -20,8 +20,7 @@ const configModel: FactoryProvider = {
       { encoding: "utf-8" }
     );
 
-    const configModel =
-      plainToInstance(ConfigModel, YAML.parse(configFile)) ?? new ConfigModel();
+    const configModel = plainToInstance(ConfigModel, YAML.parse(configFile));
 
     try {
       await validateOrReject(configModel);

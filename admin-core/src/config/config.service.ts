@@ -7,7 +7,7 @@ export class ConfigService {
 
   static isDevelopment = process.env.NODE_ENV !== "production";
 
-  get(key: keyof ConfigModel): any {
-    return this.configModel[key];
+  get<T = any>(key: keyof ConfigModel): T {
+    return this.configModel[key] as T;
   }
 }

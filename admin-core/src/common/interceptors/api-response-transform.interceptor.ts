@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { map } from "rxjs";
-import { ResultMsg } from "src/model/result-msg.model";
+import { ResultMsg } from "src/models/result-msg";
 
 /**
  * 转换api接口返回结果为ResultMsg的实例
