@@ -17,6 +17,7 @@ import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
+    //导入jwt
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -25,7 +26,9 @@ import { JwtModule } from "@nestjs/jwt";
       inject: [ConfigService],
     }),
   ],
+  //导入controllers
   controllers: importModules(__dirname + "/controllers/admin", true),
+  //使用权限验证守卫
   providers: [
     {
       provide: APP_GUARD,
@@ -64,6 +67,7 @@ class AdminControllerModule {}
       },
       inject: [ConfigService],
     }),
+    //为admin module配置url前缀
     RouterModule.register([
       {
         path: "admin",
@@ -72,6 +76,7 @@ class AdminControllerModule {}
     ]),
   ],
   controllers: [TestController],
+  //导入services
   providers: [...importModules(__dirname + "/service", true)],
 })
 export class AppModule {}
