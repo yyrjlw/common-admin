@@ -25,6 +25,11 @@ export class CacheConfig {
   redisDatabase?: number;
 }
 
+export class JwtConfig {
+  @IsNotEmpty()
+  secret: string;
+}
+
 export class ConfigModel {
   @IsInt()
   @Type(() => Number)
@@ -38,4 +43,8 @@ export class ConfigModel {
   @Type(() => CacheConfig)
   @ValidateNested()
   cache: CacheConfig;
+
+  @Type(() => JwtConfig)
+  @ValidateNested()
+  jwt: JwtConfig;
 }

@@ -1,9 +1,9 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Post } from "@nestjs/common";
 
 @Controller("auth")
 export default class AuthController {
-  @Get()
-  getHello() {
+  @Post("login")
+  login() {
     return "hello";
   }
 }

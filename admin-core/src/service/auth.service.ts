@@ -4,7 +4,7 @@ import { Cache } from "cache-manager";
 import { ADMIN_PERMS } from "src/common/constants/cache.constant";
 
 @Injectable()
-export class AuthService {
+export default class AuthService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async getPermsByIdFromCache(uid: number): Promise<string[]> {

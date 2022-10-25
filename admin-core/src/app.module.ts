@@ -8,13 +8,23 @@ import {
 import { APP_GUARD, RouterModule } from "@nestjs/core";
 import { importModules } from "src/common/utils/import-module";
 import { AuthGuard } from "./common/guards/auth.guard";
-import { CacheConfig } from "./config/config.model";
+import { CacheConfig, JwtConfig } from "./config/config.model";
 import { ConfigModule } from "./config/config.module";
 import { ConfigService } from "./config/config.service";
 import { redisStore } from "cache-manager-redis-store";
 import { TestController } from "./controllers/test.controller";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<JwtConfig>("jwt").secret,
+      }),
+      inject: [ConfigService],
+    }),
+  ],
   controllers: importModules(__dirname + "/controllers/admin", true),
   providers: [
     {

@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Controller, Get, Inject } from "@nestjs/common";
+import { CACHE_MANAGER, Controller, Get, Inject, Logger } from "@nestjs/common";
 import { Cache } from "cache-manager";
 
 @Controller("test")
