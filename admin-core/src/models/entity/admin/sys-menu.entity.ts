@@ -2,6 +2,7 @@ import {
   Collection,
   Entity,
   Enum,
+  IdentifiedReference,
   ManyToMany,
   ManyToOne,
   Property,
@@ -10,9 +11,9 @@ import { BaseEntity } from "../base.entity";
 import { Role } from "./role.entity";
 
 @Entity()
-export class SysMenu extends BaseEntity {
+export default class SysMenu extends BaseEntity {
   @ManyToOne()
-  parentMenu?: SysMenu;
+  parentMenu?: IdentifiedReference<SysMenu>;
 
   @Property({ length: 100 })
   menuName: string;

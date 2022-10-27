@@ -1,0 +1,8 @@
+port: 8080
+globalPrefix: api
+cache:
+  enableRedis: false
+  redisHost: 192.168.110.8
+  redisPort: 6379
+jwt:
+  secret: dwef156g4re8gre4g

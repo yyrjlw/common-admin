@@ -9,7 +9,7 @@ import { FastifyRequest } from "fastify";
 import { ANONYMOUS } from "../constants/decorator-metedata.constant";
 import { isEmpty } from "lodash";
 import { REQUEST_KEY_USER_PROFILE } from "../decorators/user-profire.param-decorator";
-import AuthService from "src/service/auth.service";
+import { AuthService } from "src/service/auth.service";
 import { IJwtTokenPayload } from "src/models/jwt-token-payload";
 import { ConfigService } from "src/config/config.service";
 

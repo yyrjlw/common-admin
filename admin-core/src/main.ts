@@ -1,3 +1,4 @@
+import { MikroORM } from "@mikro-orm/core";
 import { MikroOrmMiddleware } from "@mikro-orm/nestjs";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
@@ -30,7 +31,7 @@ async function bootstrap() {
   //统一API返回结果类型
   app.useGlobalInterceptors(new ApiTransformInterceptor());
   //为每个请求上下文派生EntityManager 详情参考https://mikro-orm.io/docs/installation#request-context
-  app.use(MikroOrmMiddleware);
+  // app.use(new MikroOrmMiddleware(app.get(MikroORM)));
 
   //开启监听程序终止，以便mikro-orm关闭数据库连接
   app.enableShutdownHooks();

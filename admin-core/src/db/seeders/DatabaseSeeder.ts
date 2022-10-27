@@ -2,7 +2,7 @@ import { EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
 import { AdminUser } from "src/models/entity/admin/admin-user.entity";
 import { Role } from "src/models/entity/admin/role.entity";
-import { MenuType, SysMenu } from "src/models/entity/admin/sys-menu.entity";
+import SysMenu, { MenuType } from "src/models/entity/admin/sys-menu.entity";
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {

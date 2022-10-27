@@ -1,4 +1,10 @@
-import { Entity, Property, BeforeCreate, ManyToOne } from "@mikro-orm/core";
+import {
+  Entity,
+  Property,
+  BeforeCreate,
+  ManyToOne,
+  IdentifiedReference,
+} from "@mikro-orm/core";
 import { md5 } from "src/common/utils/encrypt.util";
 import { randomString } from "src/common/utils/string.util";
 import { BaseEntity } from "../base.entity";
@@ -22,7 +28,7 @@ export class AdminUser extends BaseEntity {
   remark?: string;
 
   @ManyToOne()
-  role: Role;
+  role: IdentifiedReference<Role>;
 
   /** 给密码加点盐 */
   @BeforeCreate()

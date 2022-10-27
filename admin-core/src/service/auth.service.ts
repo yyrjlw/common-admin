@@ -8,7 +8,7 @@ import { LoginDto } from "src/models/dto/auth/login.dto";
 import { AdminUser } from "src/models/entity/admin/admin-user.entity";
 
 @Injectable()
-export default class AuthService {
+export class AuthService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(AdminUser)
@@ -30,6 +30,10 @@ export default class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    this.adminUserRepo.findOne({ userName: loginDto.userName });
+    const adminUser = await this.adminUserRepo.findOne({
+      userName: loginDto.userName,
+    });
+    if (adminUser === null) {
+    }
   }
 }

@@ -1,7 +1,13 @@
-import { Collection, Entity, ManyToMany, OneToMany, Property } from "@mikro-orm/core";
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  Property,
+} from "@mikro-orm/core";
 import { BaseEntity } from "../base.entity";
 import { AdminUser } from "./admin-user.entity";
-import { SysMenu } from "./sys-menu.entity";
+import SysMenu from "./sys-menu.entity";
 
 @Entity()
 export class Role extends BaseEntity {

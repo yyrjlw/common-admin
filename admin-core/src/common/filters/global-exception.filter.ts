@@ -3,7 +3,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-  Logger,
+  Logger
 } from "@nestjs/common";
 import { ResultMsg } from "src/models/result-msg";
 import { FastifyReply } from "fastify";
@@ -20,15 +20,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let responseData = new ResultMsg({
-      code,
-      message: ConfigService.isDevelopment
-        ? `${exception}`
-        : "服务器异常,请联系管理员",
-    });
+    let responseData: ResultMsg;
+
+    if (exception instanceof HttpException) {
+      const response = exception.getResponse();
+      //如果异常返回体是ResultMsg的实例，则直接赋值给最终结果变量
+      if (response instanceof ResultMsg) {
+        responseData = response;
+      } else if (typeof response === "string") {
+        //如果异常返回体是字符串，则直接赋值给最终结果变量的message属性
+        responseData = new ResultMsg({
+          message: exception.message
+        });
+      }
+    }
 
     if (code >= 500) {
       this._log.error(exception.message, exception.stack);
+      responseData = new ResultMsg({
+        code,
+        message: ConfigService.isDevelopment
+          ? `${exception}`
+          : "服务器异常,请联系管理员"
+      });
     }
 
     response.status(code).send(responseData);
