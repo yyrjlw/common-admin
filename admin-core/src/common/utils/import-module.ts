@@ -58,6 +58,5 @@ export function importModules(rootPath: string, deep = false, ignore?: RegExp) {
       result.push(target[0]);
     }
   }
-  console.log(result);
   return result;
 }

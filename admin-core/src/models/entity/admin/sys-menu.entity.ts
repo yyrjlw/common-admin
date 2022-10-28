@@ -5,14 +5,14 @@ import {
   IdentifiedReference,
   ManyToMany,
   ManyToOne,
-  Property,
+  Property
 } from "@mikro-orm/core";
 import { BaseEntity } from "../base.entity";
 import { Role } from "./role.entity";
 
 @Entity()
 export default class SysMenu extends BaseEntity {
-  @ManyToOne()
+  @ManyToOne(() => SysMenu, { nullable: true })
   parentMenu?: IdentifiedReference<SysMenu>;
 
   @Property({ length: 100 })
@@ -21,16 +21,16 @@ export default class SysMenu extends BaseEntity {
   @Enum({ items: () => MenuType, comment: "菜单类型:0目录 1菜单 2权限" })
   menuType: MenuType;
 
-  @Property({ length: 200, comment: "客户端路由" })
+  @Property({ length: 200, nullable: true, comment: "客户端路由" })
   router?: string;
 
-  @Property({ length: 200, comment: "权限字符串" })
+  @Property({ length: 200, nullable: true, comment: "权限字符串" })
   permissions?: string;
 
-  @Property({ length: 200, comment: "客户端视图路径" })
+  @Property({ length: 200, nullable: true, comment: "客户端视图路径" })
   viewPath?: string;
 
-  @Property({ length: 100 })
+  @Property({ length: 100, nullable: true })
   icon?: string;
 
   @Property()
@@ -49,5 +49,5 @@ export default class SysMenu extends BaseEntity {
 export enum MenuType {
   DIRECTORY,
   MENU,
-  PERMISSION,
+  PERMISSION
 }

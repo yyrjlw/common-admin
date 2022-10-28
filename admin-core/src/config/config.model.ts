@@ -5,7 +5,7 @@ import {
   IsInt,
   IsNotEmpty,
   ValidateIf,
-  ValidateNested,
+  ValidateNested
 } from "class-validator";
 
 export class CacheConfig {
@@ -28,6 +28,14 @@ export class CacheConfig {
 export class JwtConfig {
   @IsNotEmpty()
   secret: string;
+
+  @IsInt()
+  @Type(() => Number)
+  expiresIn: number;
+
+  @IsInt()
+  @Type(() => Number)
+  longExpiresIn: number;
 }
 
 export class ConfigModel {

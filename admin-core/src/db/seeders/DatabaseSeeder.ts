@@ -7,28 +7,30 @@ import SysMenu, { MenuType } from "src/models/entity/admin/sys-menu.entity";
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
     const role = em.create(Role, {
-      roleName: "root",
+      roleName: "root"
     });
     em.create(AdminUser, {
       nickName: "超管",
       userName: "admin",
       password: "admin123",
-      role,
+      role
     });
 
     const sysDire = em.create(SysMenu, {
       menuName: "系统",
       menuType: MenuType.DIRECTORY,
       router: "/sys",
-      icon: "",
+      icon: ""
     });
     const permssionDire = em.create(SysMenu, {
       parentMenu: sysDire,
       menuName: "权限管理",
       menuType: MenuType.DIRECTORY,
       router: "/permssion",
-      icon: "",
+      icon: ""
     });
+
+    const permPrefix = "admin:";
 
     //#region 管理员列表
 
@@ -38,31 +40,31 @@ export class DatabaseSeeder extends Seeder {
       menuType: MenuType.MENU,
       router: "/adminUser",
       viewPath: "views/system/permission/user",
-      icon: "",
+      icon: ""
     });
     const viewUserPerm = em.create(SysMenu, {
       parentMenu: userMenu,
       menuName: "查询",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:user:list,sys:user:info",
+      permissions: `${permPrefix}user:list,${permPrefix}user:info`
     });
     const addUserPerm = em.create(SysMenu, {
       parentMenu: userMenu,
       menuName: "新增",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:user:add",
+      permissions: permPrefix + "user:add"
     });
     const updateUserPerm = em.create(SysMenu, {
       parentMenu: userMenu,
       menuName: "修改",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:user:update",
+      permissions: permPrefix + "user:update"
     });
     const deleteUserPerm = em.create(SysMenu, {
       parentMenu: userMenu,
       menuName: "删除",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:user:delete",
+      permissions: permPrefix + "user:delete"
     });
 
     //#endregion
@@ -75,31 +77,31 @@ export class DatabaseSeeder extends Seeder {
       menuType: MenuType.MENU,
       router: "/menu",
       viewPath: "views/system/permission/menu",
-      icon: "",
+      icon: ""
     });
     const viewMenuPerm = em.create(SysMenu, {
       parentMenu: menuMenu,
       menuName: "查询",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:menu:list,sys:menu:info",
+      permissions: `${permPrefix}menu:list,${permPrefix}menu:info`
     });
     const addMenuPerm = em.create(SysMenu, {
       parentMenu: menuMenu,
       menuName: "新增",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:menu:add",
+      permissions: permPrefix + "menu:add"
     });
     const updateMenuPerm = em.create(SysMenu, {
       parentMenu: menuMenu,
       menuName: "修改",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:menu:update",
+      permissions: permPrefix + "menu:update"
     });
     const deleteMenuPerm = em.create(SysMenu, {
       parentMenu: menuMenu,
       menuName: "删除",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:menu:delete",
+      permissions: permPrefix + "menu:delete"
     });
 
     //#endregion
@@ -112,31 +114,31 @@ export class DatabaseSeeder extends Seeder {
       menuType: MenuType.MENU,
       router: "/role",
       viewPath: "views/system/permission/role",
-      icon: "",
+      icon: ""
     });
     const viewRolePerm = em.create(SysMenu, {
       parentMenu: roleMenu,
       menuName: "查询",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:role:list,sys:role:info",
+      permissions: `${permPrefix}role:list,${permPrefix}role:info`
     });
     const addRolePerm = em.create(SysMenu, {
       parentMenu: roleMenu,
       menuName: "新增",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:role:add",
+      permissions: permPrefix + "role:add"
     });
     const updateRolePerm = em.create(SysMenu, {
       parentMenu: roleMenu,
       menuName: "修改",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:role:update",
+      permissions: permPrefix + "role:update"
     });
     const deleteRolePerm = em.create(SysMenu, {
       parentMenu: roleMenu,
       menuName: "删除",
       menuType: MenuType.PERMISSION,
-      permissions: "sys:role:delete",
+      permissions: permPrefix + "role:delete"
     });
 
     //#endregion

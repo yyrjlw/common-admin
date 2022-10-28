@@ -1,7 +1,10 @@
 import {
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
@@ -13,6 +16,7 @@ import { AuthService } from "src/service/auth.service";
 import { IJwtTokenPayload } from "src/models/jwt-token-payload";
 import { ConfigService } from "src/config/config.service";
 
+@Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
@@ -30,10 +34,11 @@ export class AuthGuard implements CanActivate {
     const path = request.url.split("?")[0];
 
     //验证token
-    const token = request.headers["authorization"];
+    let token = request.headers["authorization"];
     if (!token) {
       throw new UnauthorizedException();
     }
+    token = token.slice("Bearer ".length);
     let userProfile: IJwtTokenPayload;
     try {
       userProfile = await this.jtwService.verifyAsync(token);
@@ -55,7 +60,7 @@ export class AuthGuard implements CanActivate {
         path.replace(`/${this.configService.get("globalPrefix")}/`, "")
       )
     ) {
-      throw new UnauthorizedException();
+      throw new HttpException("您没有权限访问!", HttpStatus.UNAUTHORIZED);
     }
 
     return true;

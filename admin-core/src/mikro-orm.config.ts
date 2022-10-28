@@ -1,6 +1,5 @@
 import { LoadStrategy, UnderscoreNamingStrategy } from "@mikro-orm/core";
 import { Options, Configuration } from "@mikro-orm/core";
-import { TsMorphMetadataProvider } from "@mikro-orm/reflection";
 import { Logger } from "@nestjs/common";
 import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
 
@@ -17,14 +16,13 @@ export default {
   timezone: "+08:00",
   entities: ["dist/models/entity/**/*.js"],
   entitiesTs: ["src/models/entity/**/*.ts"],
-  metadataProvider: TsMorphMetadataProvider,
   namingStrategy: UnderscoreNamingStrategy, //小写加下划线命名策略
   forceUndefined: true, //将空值映射为undefined
   debug: true,
   logger: (message: string) => log.log(message),
   highlighter: new SqlHighlighter(), //输出漂亮的sql语句到日志
   schemaGenerator: {
-    createForeignKeyConstraints: false, //不生成外键约束
+    createForeignKeyConstraints: false //不生成外键约束
   },
   //全局 软删除 过滤器
   filters: {
@@ -34,17 +32,17 @@ export default {
           return { isDelete: false };
         }
       },
-      args: false,
-    },
+      args: false
+    }
   },
   loadStrategy: LoadStrategy.JOINED, //关系查询使用left join(只输出一条sql语句，而不是select .... in 两条SQL)
   migrations: {
     path: "dist/db/migrations",
-    pathTs: "src/db/migrations",
+    pathTs: "src/db/migrations"
   },
   seeder: {
     pathTs: "src/db/seeders",
     path: "dist/db/seeders",
-    defaultSeeder: "DatabaseSeeder",
-  },
+    defaultSeeder: "DatabaseSeeder"
+  }
 } as Options | Configuration;

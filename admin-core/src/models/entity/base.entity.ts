@@ -5,22 +5,23 @@ export abstract class BaseEntity {
   @PrimaryKey()
   id: number;
 
-  @Property({ unsigned: true })
-  createTime: number = dayjs().unix();
+  @Property({ unsigned: true, onCreate: () => dayjs().unix() })
+  createTime: number;
 
-  @Property()
+  @Property({ nullable: true })
   createBy?: number;
 
   @Property({
     unsigned: true,
-    onUpdate: () => dayjs().unix(),
+    nullable: true,
+    onUpdate: () => dayjs().unix()
   })
   updateTime?: number;
 
-  @Property()
+  @Property({ nullable: true })
   updateBy?: number;
 
-  @Property({ unsigned: true })
+  @Property({ unsigned: true, nullable: true })
   deleteTime?: number;
 
   @Property()

@@ -3,10 +3,9 @@ import {
   Property,
   BeforeCreate,
   ManyToOne,
-  IdentifiedReference,
+  IdentifiedReference
 } from "@mikro-orm/core";
 import { md5 } from "src/common/utils/encrypt.util";
-import { randomString } from "src/common/utils/string.util";
 import { BaseEntity } from "../base.entity";
 import { Role } from "./role.entity";
 
@@ -21,18 +20,15 @@ export class AdminUser extends BaseEntity {
   @Property({ length: 150 })
   password: string;
 
-  @Property({ length: 10 })
-  salt: string = randomString(10);
-
-  @Property({ length: 200 })
+  @Property({ length: 200, nullable: true })
   remark?: string;
 
-  @ManyToOne()
+  @ManyToOne(() => Role)
   role: IdentifiedReference<Role>;
 
   /** 给密码加点盐 */
   @BeforeCreate()
   saltingForPwd() {
-    this.password = md5(this.password, this.salt);
+    this.password = md5(this.password);
   }
 }

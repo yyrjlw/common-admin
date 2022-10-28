@@ -3,7 +3,7 @@ import {
   Entity,
   ManyToMany,
   OneToMany,
-  Property,
+  Property
 } from "@mikro-orm/core";
 import { BaseEntity } from "../base.entity";
 import { AdminUser } from "./admin-user.entity";
@@ -14,12 +14,12 @@ export class Role extends BaseEntity {
   @Property({ length: 100 })
   roleName: string;
 
-  @Property({ length: 200 })
+  @Property({ length: 200, nullable: true })
   remark?: string;
 
   @OneToMany(() => AdminUser, (user) => user.role)
   users = new Collection<AdminUser>(this);
 
-  @ManyToMany()
+  @ManyToMany(() => SysMenu)
   menus = new Collection<SysMenu>(this);
 }

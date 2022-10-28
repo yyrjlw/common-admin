@@ -1,1 +1,4 @@
-export const ADMIN_PERMS = "admin:perms:";
+export const CacheKey = {
+  ADMIN_PERMS: "admin:perms:",
+  ADMIN_TOKEN: "admin:token:"
+};

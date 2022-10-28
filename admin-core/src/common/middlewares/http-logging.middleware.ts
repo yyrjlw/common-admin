@@ -12,7 +12,8 @@ export function HttpLoggingMiddleware(
 
   _log.log(`
   http-method:${request.method}\t http-url:${request.url}
-  requestData=${JSON.stringify(requestData, null, 2)}`);
+  requestData=${JSON.stringify(requestData, null, 2)}
+  `);
 
   next();
 }

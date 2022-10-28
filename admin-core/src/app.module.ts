@@ -7,49 +7,34 @@ import {
   Module,
   NestModule
 } from "@nestjs/common";
-import { APP_GUARD, RouterModule } from "@nestjs/core";
 import { importModules } from "src/common/utils/import-module";
-import { AuthGuard } from "./common/guards/auth.guard";
 import { CacheConfig, JwtConfig } from "./config/config.model";
 import { ConfigModule } from "./config/config.module";
 import { ConfigService } from "./config/config.service";
 import { redisStore } from "cache-manager-redis-store";
-import { TestController } from "./controllers/test.controller";
 import { JwtModule } from "@nestjs/jwt";
-
-@Module({
-  imports: [
-    //导入jwt
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<JwtConfig>("jwt").secret
-      }),
-      inject: [ConfigService]
-    })
-  ],
-  //导入controllers TODO 失效
-  controllers: importModules("src/controllers/admin", true),
-  //使用权限验证守卫
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard
-    }
-  ]
-})
-class AdminControllerModule {}
 
 @Module({
   imports: [
     //配置
     ConfigModule,
+    //导入jwt
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<JwtConfig>("jwt").secret,
+        signOptions: {
+          expiresIn: configService.get<JwtConfig>("jwt").expiresIn
+        }
+      }),
+      inject: [ConfigService]
+    }),
     //ORM
     MikroOrmModule.forRoot(),
     MikroOrmModule.forFeature(
       importModules("src/models/entity", true, /base\.entity\.(ts|js)$/)
     ),
-    //缓存
+    //缓存 TODO redis缓存过期时间无效
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
@@ -71,21 +56,15 @@ class AdminControllerModule {}
         return cacheConfigResult;
       },
       inject: [ConfigService]
-    }),
-    //为admin module配置url前缀
-    RouterModule.register([
-      {
-        path: "admin",
-        module: AdminControllerModule
-      }
-    ])
+    })
   ],
-  controllers: [TestController],
+  controllers: importModules("src/controllers", true),
   //导入services
-  providers: [...importModules("src/service", true)]
+  providers: importModules("src/service", true)
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    //为每个请求上下文派生EntityManager 详情参考https://mikro-orm.io/docs/installation#request-context
     consumer.apply(MikroOrmMiddleware).forRoutes("*");
   }
 }
