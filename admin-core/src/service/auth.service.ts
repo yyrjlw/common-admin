@@ -20,6 +20,8 @@ import { ResultMsg, ResultStatusCode } from "src/models/result-msg";
 import { ConfigService } from "src/config/config.service";
 import { JwtConfig } from "src/config/config.model";
 import { omit } from "lodash";
+import svgCaptcha from "svg-captcha";
+import { uuid } from "src/common/utils/string.util";
 
 @Injectable()
 export class AuthService {
@@ -140,5 +142,17 @@ export class AuthService {
         })
       );
     }
+  }
+
+  /**
+   * 获取验证码图片
+   */
+  async getCaptchaImg() {
+    const { data, text } = svgCaptcha.create({
+      noise: 4
+    });
+    const id = uuid();
+    await this.cacheManager.set(CacheKey.ADMIN_CAPTCHA + id, text, 60);
+    console.log(data);
   }
 }

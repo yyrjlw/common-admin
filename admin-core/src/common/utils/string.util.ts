@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 const randomStringOptions = [];
 //a-z大小写
 for (let index = 97; index <= 122; index++) {
@@ -19,3 +21,5 @@ export const randomString = (len: number) => {
   }
   return result;
 };
+
+export const uuid = (): string => v4();

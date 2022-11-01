@@ -20,4 +20,10 @@ export class AuthController {
   refreshToken(@Body("accessToken") accessToken: string) {
     return this.authService.refreshToken(accessToken);
   }
+
+  @Anonymous()
+  @Get("captchaImg")
+  getCaptchaImg() {
+    return this.authService.getCaptchaImg();
+  }
 }

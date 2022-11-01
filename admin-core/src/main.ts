@@ -6,10 +6,12 @@ import {
   FastifyAdapter,
   NestFastifyApplication
 } from "@nestjs/platform-fastify";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
 import { ApiTransformInterceptor } from "./common/interceptors/api-response-transform.interceptor";
 import { HttpLoggingMiddleware } from "./common/middlewares/http-logging.middleware";
+import { SwaggerConfig } from "./config/config.model";
 import { ConfigService } from "./config/config.service";
 
 async function bootstrap() {
@@ -40,6 +42,17 @@ async function bootstrap() {
 
   //开启监听程序终止，以便mikro-orm关闭数据库连接
   app.enableShutdownHooks();
+
+  //swagger
+  const swaggerConfigByYml = configService.get<SwaggerConfig>("swagger");
+  if (swaggerConfigByYml.enable) {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle(swaggerConfigByYml.title)
+      .setVersion("1.0")
+      .build();
+    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup(swaggerConfigByYml.path, app, swaggerDocument);
+  }
 
   const port = configService.get("port");
 

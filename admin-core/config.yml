@@ -1,7 +1,7 @@
 port: 8080
 globalPrefix: api
 cache:
-  enableRedis: true
+  enableRedis: false
   redisHost: 192.168.110.8
   redisPort: 6379
   redisDatabase: 1
@@ -9,3 +9,7 @@ jwt:
   secret: dwef156g4re8gre4g
   expiresIn: 150
   longExpiresIn: 18000
+swagger:
+  enable: true
+  path: api-document
+  title: 通用后台管理系统

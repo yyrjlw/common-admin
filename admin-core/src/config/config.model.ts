@@ -8,6 +8,13 @@ import {
   ValidateNested
 } from "class-validator";
 
+export class SwaggerConfig {
+  @IsBoolean()
+  enable: boolean;
+  path: string = "api-document";
+  title: string;
+}
+
 export class CacheConfig {
   @IsBoolean()
   enableRedis: boolean;
@@ -55,4 +62,8 @@ export class ConfigModel {
   @Type(() => JwtConfig)
   @ValidateNested()
   jwt: JwtConfig;
+
+  @Type(() => SwaggerConfig)
+  @ValidateNested()
+  swagger: SwaggerConfig;
 }
