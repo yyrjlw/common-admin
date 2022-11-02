@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "cross-env NODE_ENV=development NEST start -w",
     "build": "nest build",
     "start-dist": "pm2 start --daemon",
     "database:seeder": "mikro-orm seeder:run",
     "database:update": "mikro-orm schema:update --run"
   },
   "dependencies": {
+    "@fastify/static": "^6.5.0",
     "@mikro-orm/cli": "^5.5.0",
     "@mikro-orm/core": "^5.5.0",
     "@mikro-orm/migrations": "^5.5.0",
@@ -39,17 +40,17 @@
     "@types/cache-manager": "^4.0.2",
     "@types/lodash": "^4.14.186",
     "@types/node": "^18.11.4",
+    "cross-env": "^7.0.3",
     "fastify": "^4.9.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
+    "source-map-support": "^0.5.21",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   },
   "mikro-orm": {
-    "useTsNode": true,
     "configPaths": [
-      "./src/mikro-orm.config.ts",
       "./dist/mikro-orm.config.js"
     ]
   }

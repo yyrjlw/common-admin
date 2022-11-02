@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
-import { ConfigService } from "src/config/config.service";
 
 /**
  * 递归查找文件夹内的文件
@@ -33,19 +32,29 @@ function finder(path: string, deep: boolean) {
  * @param ignore 忽略的文件名
  * @returns
  */
-export function importModules(rootPath: string, deep = false, ignore?: RegExp) {
+export function importModules(
+  rootPath: string,
+  deep = false,
+  ignore?: RegExp | string[]
+) {
   if (rootPath.startsWith("./")) {
     throw new Error("不支持相对路径导入");
   }
-  rootPath = rootPath.replace("\\", "/");
-  if (rootPath.startsWith("src/") && !ConfigService.isDevelopment) {
-    rootPath = "dist/" + rootPath.slice(4);
-  }
 
   const result: any[] = [];
-  for (const file of finder(rootPath, deep)) {
-    if (ignore?.test(file)) {
-      continue;
+  for (let file of finder(rootPath, deep)) {
+    file = file.replaceAll("\\", "/");
+    if (Array.isArray(ignore)) {
+      const tmp = file.split("/");
+      const fileName = tmp[tmp.length - 1];
+
+      if (ignore.includes(fileName)) {
+        continue;
+      }
+    } else {
+      if (ignore?.test(file)) {
+        continue;
+      }
     }
 
     if (require(file).default) {

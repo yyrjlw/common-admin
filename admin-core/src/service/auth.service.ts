@@ -22,6 +22,7 @@ import { JwtConfig } from "src/config/config.model";
 import { omit } from "lodash";
 import svgCaptcha from "svg-captcha";
 import { uuid } from "src/common/utils/string.util";
+import { GetCaptchaImgDto } from "src/models/dto/auth/get-captcha-img.dto";
 
 @Injectable()
 export class AuthService {
@@ -86,7 +87,9 @@ export class AuthService {
     if (adminUser === null) {
       throw new HttpException("用户名或密码错误", HttpStatus.UNAUTHORIZED);
     }
-    if (md5(adminUser.password + loginDto.timestamp) !== loginDto.password) {
+    if (
+      md5(adminUser.password + "" + loginDto.timestamp) !== loginDto.password
+    ) {
       throw new HttpException("用户名或密码错误", HttpStatus.UNAUTHORIZED);
     }
     //获取用户权限字符串并缓存
@@ -147,12 +150,17 @@ export class AuthService {
   /**
    * 获取验证码图片
    */
-  async getCaptchaImg() {
+  async getCaptchaImg(getCaptchaimgDto: GetCaptchaImgDto) {
     const { data, text } = svgCaptcha.create({
-      noise: 4
+      noise: 4,
+      width: getCaptchaimgDto.width,
+      height: getCaptchaimgDto.height
     });
     const id = uuid();
     await this.cacheManager.set(CacheKey.ADMIN_CAPTCHA + id, text, 60);
-    console.log(data);
+    return {
+      img: `data:image/svg+xml;base64,${Buffer.from(data).toString("base64")}`,
+      id
+    };
   }
 }

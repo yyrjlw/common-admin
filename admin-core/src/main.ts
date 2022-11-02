@@ -49,6 +49,7 @@ async function bootstrap() {
     const swaggerConfig = new DocumentBuilder()
       .setTitle(swaggerConfigByYml.title)
       .setVersion("1.0")
+      .addBearerAuth()
       .build();
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup(swaggerConfigByYml.path, app, swaggerDocument);
@@ -58,6 +59,8 @@ async function bootstrap() {
 
   await app.listen(port);
   log.log(`应用启动成功!URL:http://localhost:${port}`);
+  swaggerConfigByYml.enable &&
+    log.log(`API 文档 URL:http://localhost:${port}/${swaggerConfigByYml.path}`);
 }
 
 bootstrap();

@@ -13,6 +13,7 @@ import { ConfigModule } from "./config/config.module";
 import { ConfigService } from "./config/config.service";
 import { redisStore } from "cache-manager-redis-store";
 import { JwtModule } from "@nestjs/jwt";
+import { join } from "path";
 
 @Module({
   imports: [
@@ -32,7 +33,9 @@ import { JwtModule } from "@nestjs/jwt";
     //ORM
     MikroOrmModule.forRoot(),
     MikroOrmModule.forFeature(
-      importModules("src/models/entity", true, /base\.entity\.(ts|js)$/)
+      importModules(join(__dirname, "./models/entity"), true, [
+        "base.entity.js"
+      ])
     ),
     //缓存 TODO redis缓存过期时间无效
     CacheModule.registerAsync({
@@ -58,9 +61,9 @@ import { JwtModule } from "@nestjs/jwt";
       inject: [ConfigService]
     })
   ],
-  controllers: importModules("src/controllers", true),
+  controllers: importModules(join(__dirname, "./controllers"), true),
   //导入services
-  providers: importModules("src/service", true)
+  providers: importModules(join(__dirname, "./service"), true)
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

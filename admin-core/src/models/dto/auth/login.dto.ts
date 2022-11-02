@@ -1,4 +1,6 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty } from "class-validator";
+import dayjs from "dayjs";
 
 export class LoginDto {
   @IsNotEmpty()
@@ -7,6 +9,9 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 
+  @ApiProperty({
+    example: dayjs().unix()
+  })
   @IsInt()
   timestamp: number;
 }

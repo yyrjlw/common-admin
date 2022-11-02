@@ -15,7 +15,6 @@ export default {
   charset: "utf8mb4",
   timezone: "+08:00",
   entities: ["dist/models/entity/**/*.js"],
-  entitiesTs: ["src/models/entity/**/*.ts"],
   namingStrategy: UnderscoreNamingStrategy, //小写加下划线命名策略
   forceUndefined: true, //将空值映射为undefined
   debug: true,
@@ -37,11 +36,9 @@ export default {
   },
   loadStrategy: LoadStrategy.JOINED, //关系查询使用left join(只输出一条sql语句，而不是select .... in 两条SQL)
   migrations: {
-    path: "dist/db/migrations",
-    pathTs: "src/db/migrations"
+    path: "dist/db/migrations"
   },
   seeder: {
-    pathTs: "src/db/seeders",
     path: "dist/db/seeders",
     defaultSeeder: "DatabaseSeeder"
   }

@@ -23,15 +23,21 @@
         <el-input
           class="mb-5"
           v-model="loginForm.captcha"
-          show-password
           placeholder="请输入验证码"
           :prefix-icon="MessageBox"
         >
           <template #suffix>
-            <img class="h-full" :src="imgForCaptCha" alt="验证码加载异常" />
+            <img
+              class="cursor-pointer"
+              :src="imgForCaptCha"
+              alt="验证码加载异常"
+              @click="loadCaptchaImg"
+            />
           </template>
         </el-input>
-        <el-button type="primary" class="w-full">登录</el-button>
+        <el-button type="primary" class="w-full" @click="loginHandle"
+          >登录</el-button
+        >
       </el-form>
     </div>
   </div>
@@ -40,15 +46,40 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { User, Lock, MessageBox } from "@element-plus/icons-vue";
+import { getCaptchaImg } from "@/api/auth";
+import { useAdminStore } from "@/stores/admin";
+
+const adminStore = useAdminStore();
 
 const imgForCaptCha = ref();
+const loadCaptchaImg = () =>
+  getCaptchaImg({
+    width: 100,
+    height: 40,
+  }).then(({ data }) => {
+    imgForCaptCha.value = data.img;
+    loginForm.captchaID = data.id;
+  });
+loadCaptchaImg();
 
 const loginForm = reactive({
-  userName: null,
-  password: null,
-  timestamp: null,
-  captcha: null,
+  userName: "",
+  password: "",
+  captcha: "",
+  captchaID: "",
 });
+
+const loginHandle = () => {
+  if (!loginForm.userName.trim() || !loginForm.password.trim()) {
+    return ElMessage.warning({ message: "用户名或密码不能为空!" });
+  }
+  if (!loginForm.captcha.trim()) {
+    return ElMessage.warning({ message: "请输入验证码!" });
+  }
+  adminStore.login(loginForm).catch(() => {
+    loadCaptchaImg();
+  });
+};
 </script>
 
 <style scoped lang="scss"></style>
