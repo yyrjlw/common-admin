@@ -1,25 +1,50 @@
-import { sessionStorageKey } from "@/constants/storage";
+import { localStorageKey, sessionStorageKey } from "@/constants/storage";
 import router from "@/router";
 import { getStorage, setStorage } from "@/utils/storage";
 import { defineStore } from "pinia";
 import { v4 as uuidV4 } from "uuid";
 import md5 from "md5";
-import { login } from "@/api/auth";
-import type { LoginParams } from "@/interfaces/auth";
+import { getPermmenu, login } from "@/api/auth";
+import type { LoginParams } from "@/models/auth";
 import dayjs from "dayjs";
+import { generatorDynamicRouter } from "@/utils/route";
+import type { RouteRecordRaw } from "vue-router";
+import type { Menu } from "@/api/auth/model/LoginModel";
 
-export const useAdminStore = defineStore("admin", {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
     accessToken: getStorage(sessionStorageKey.accessToken, "session"),
     expiresIn: getStorage(sessionStorageKey.expiresIn, "session"),
     tokenVersion: uuidV4(),
+    perms: getStorage(localStorageKey.perms, "local") as string[],
+    menus: getStorage(localStorageKey.menus, "local") as RouteRecordRaw[],
     profile: {
       avatar: "https://www.ykt9.com/static/img/profile.8bc564d2.jpg",
       uuid: getStorage(sessionStorageKey.uuid, "session"),
     },
   }),
   actions: {
-    setToken(data: any) {
+    setMenuOrPerms({
+      menus,
+      perms,
+    }: {
+      menus?: RouteRecordRaw[];
+      perms?: string[];
+    }) {
+      if (!menus && !perms) {
+        console.warn("menus和perms都为空");
+        return;
+      }
+      if (menus) {
+        this.menus = menus;
+        setStorage(localStorageKey.menus, menus, "local");
+      }
+      if (perms) {
+        this.perms = perms;
+        setStorage(localStorageKey.perms, perms, "local");
+      }
+    },
+    setToken(data: Pick<typeof this, "accessToken" | "expiresIn">) {
       this.accessToken = data.accessToken;
       this.expiresIn = data.expiresIn;
       this.tokenVersion = uuidV4();
@@ -46,11 +71,19 @@ export const useAdminStore = defineStore("admin", {
       this.setToken(result.data);
       this.setProfile(result.data);
 
-      router.push("/");
+      //登录成功后获取权限和菜单
+      const { data } = await getPermmenu();
+      this.perms = data.perms;
+
+      const dynamicRouters = generatorDynamicRouter(data.menus);
+      this.setMenuOrPerms({
+        menus: dynamicRouters.filter((i) => i.meta?.isShow),
+      });
+      setStorage(localStorageKey.rawMenus, data.menus, "local");
     },
     logout() {
       this.clearUserInfo();
-      router.push("/login");
+      router.replace("/login");
     },
   },
 });

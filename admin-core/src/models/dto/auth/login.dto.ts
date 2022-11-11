@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty } from "class-validator";
+import { IsInt, IsNotEmpty, IsUUID } from "class-validator";
 import dayjs from "dayjs";
 
 export class LoginDto {
@@ -14,4 +14,10 @@ export class LoginDto {
   })
   @IsInt()
   timestamp: number;
+
+  @IsNotEmpty()
+  captcha: string;
+
+  @IsNotEmpty()
+  captchaID: string;
 }

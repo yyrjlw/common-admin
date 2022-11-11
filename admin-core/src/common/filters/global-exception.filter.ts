@@ -20,7 +20,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    let responseData: ResultMsg;
+    let responseData = new ResultMsg();
 
     if (exception instanceof HttpException) {
       const response = exception.getResponse();
@@ -29,20 +29,15 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         responseData = response;
       } else if (typeof response === "string") {
         //如果异常返回体是字符串，则直接赋值给最终结果变量的message属性
-        responseData = new ResultMsg({
-          message: exception.message
-        });
+        responseData.message = exception.message;
       }
     }
 
     if (code >= 500) {
       this._log.error(exception.message, exception.stack);
-      responseData = new ResultMsg({
-        code,
-        message: ConfigService.isDevelopment
-          ? `${exception}`
-          : "服务器异常,请联系管理员"
-      });
+      responseData.message = ConfigService.isDevelopment
+        ? `${exception}`
+        : "服务器异常,请联系管理员";
     }
 
     response.status(code).send(responseData);

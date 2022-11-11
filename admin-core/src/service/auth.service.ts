@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   UnauthorizedException
 } from "@nestjs/common";
 import { CACHE_MANAGER, Inject } from "@nestjs/common";
@@ -23,6 +24,7 @@ import { omit } from "lodash";
 import svgCaptcha from "svg-captcha";
 import { uuid } from "src/common/utils/string.util";
 import { GetCaptchaImgDto } from "src/models/dto/auth/get-captcha-img.dto";
+import { ApiException } from "src/common/exception/api.exception";
 
 @Injectable()
 export class AuthService {
@@ -34,6 +36,8 @@ export class AuthService {
     @InjectRepository(AdminUser)
     private readonly adminUserRepo: EntityRepository<AdminUser>
   ) {}
+
+  private readonly log = new Logger(AuthService.name);
 
   /**
    * 从缓存获取用户权限
@@ -73,7 +77,7 @@ export class AuthService {
     await this.cacheManager.set(
       CacheKey.ADMIN_TOKEN + resp.accessToken,
       resp.accessToken,
-      longExpiresIn
+      longExpiresIn * 1000
     );
 
     return resp;
@@ -85,13 +89,39 @@ export class AuthService {
     });
     //验证用户名密码
     if (adminUser === null) {
-      throw new HttpException("用户名或密码错误", HttpStatus.UNAUTHORIZED);
+      throw new ApiException({
+        code: ResultStatusCode.用户名或密码错误,
+        message: "用户名或密码错误"
+      });
     }
     if (
       md5(adminUser.password + "" + loginDto.timestamp) !== loginDto.password
     ) {
-      throw new HttpException("用户名或密码错误", HttpStatus.UNAUTHORIZED);
+      throw new ApiException({
+        code: ResultStatusCode.用户名或密码错误,
+        message: "用户名或密码错误"
+      });
     }
+
+    if (!ConfigService.isDevelopment) {
+      //验证验证码
+      const captchaFromCache = await this.cacheManager.get<string>(
+        CacheKey.ADMIN_CAPTCHA + loginDto.captchaID
+      );
+      if (!captchaFromCache) {
+        throw new ApiException({
+          code: ResultStatusCode.验证码校验失败,
+          message: "验证码已过期"
+        });
+      }
+      if (captchaFromCache !== loginDto.captcha.toUpperCase()) {
+        throw new ApiException({
+          code: ResultStatusCode.验证码校验失败,
+          message: "验证码错误"
+        });
+      }
+    }
+
     //获取用户权限字符串并缓存
     const perms = await this.menuService.getPerms(adminUser.role.id);
     await this.cacheManager.set(
@@ -101,7 +131,8 @@ export class AuthService {
 
     //构建token并缓存
     const result = await this.generateToken({
-      uid: adminUser.id
+      uid: adminUser.id,
+      roleID: adminUser.role.id
     });
     return result;
   }
@@ -125,12 +156,10 @@ export class AuthService {
           complete: true
         });
       } catch (error) {
-        throw new UnauthorizedException(
-          new ResultMsg({
-            code: ResultStatusCode.登录状态已过期,
-            message: "token验证失败,请重新登录"
-          })
-        );
+        throw new ApiException({
+          code: ResultStatusCode.登录状态已过期,
+          message: "token验证失败,请重新登录"
+        });
       }
 
       //验证成功并返回新token
@@ -138,12 +167,10 @@ export class AuthService {
         omit(jwtPayload, ["iat", "exp"]) as IJwtTokenPayload
       );
     } else {
-      throw new UnauthorizedException(
-        new ResultMsg({
-          code: ResultStatusCode.登录状态已过期,
-          message: "登录状态已过期"
-        })
-      );
+      throw new ApiException({
+        code: ResultStatusCode.登录状态已过期,
+        message: "登录状态已过期,请重新登录"
+      });
     }
   }
 
@@ -157,10 +184,23 @@ export class AuthService {
       height: getCaptchaimgDto.height
     });
     const id = uuid();
-    await this.cacheManager.set(CacheKey.ADMIN_CAPTCHA + id, text, 60);
+    await this.cacheManager.set(
+      CacheKey.ADMIN_CAPTCHA + id,
+      text.toUpperCase(),
+      1000 * 60 * 5
+    );
+    this.log.debug("Captcha=" + text);
+
     return {
       img: `data:image/svg+xml;base64,${Buffer.from(data).toString("base64")}`,
       id
     };
+  }
+
+  async getPermmenu({ roleID }: IJwtTokenPayload) {
+    const perms = await this.menuService.getPerms(roleID);
+    const menus = await this.menuService.getMenus(roleID);
+
+    return { perms, menus };
   }
 }

@@ -1,4 +1,5 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { IJwtTokenPayload } from "src/models/jwt-token-payload";
 
 export const REQUEST_KEY_USER_PROFILE = "user_profile";
 
@@ -8,7 +9,7 @@ export const REQUEST_KEY_USER_PROFILE = "user_profile";
 export const UserProfile = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    const userProfile = request[REQUEST_KEY_USER_PROFILE];
+    const userProfile = request[REQUEST_KEY_USER_PROFILE] as IJwtTokenPayload;
     return data ? userProfile?.[data] : userProfile;
   }
 );

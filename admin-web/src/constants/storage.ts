@@ -5,3 +5,9 @@ export const sessionStorageKey = {
   avatar: "avatar",
   uuid: "uuid",
 };
+
+export const localStorageKey = {
+  rawMenus: "rawMenus",
+  menus: "menus",
+  perms: "perms",
+};

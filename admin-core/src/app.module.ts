@@ -42,7 +42,7 @@ import { join } from "path";
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         const cacheConfigResult: CacheModuleOptions = {
-          ttl: 60 * 60 * 24 * 7
+          ttl: 1000 * 60 * 60 * 24 * 7
         };
         const cacheConfig = configService.get<CacheConfig>("cache");
         if (cacheConfig.enableRedis) {

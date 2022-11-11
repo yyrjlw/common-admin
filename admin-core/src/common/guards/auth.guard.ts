@@ -9,12 +9,17 @@ import {
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { FastifyRequest } from "fastify";
-import { ANONYMOUS } from "../constants/decorator-metedata.constant";
+import {
+  ANONYMOUS,
+  PERMISSIONOPTIONAL
+} from "../constants/decorator-metedata.constant";
 import { isEmpty } from "lodash";
 import { REQUEST_KEY_USER_PROFILE } from "../decorators/user-profire.param-decorator";
 import { AuthService } from "src/service/auth.service";
 import { IJwtTokenPayload } from "src/models/jwt-token-payload";
 import { ConfigService } from "src/config/config.service";
+import { ApiException } from "../exception/api.exception";
+import { ResultStatusCode } from "src/models/result-msg";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -25,7 +30,7 @@ export class AuthGuard implements CanActivate {
     private configService: ConfigService
   ) {}
   async canActivate(context: ExecutionContext) {
-    //如果控制器被装饰为anonymous，则跳过验证
+    //如果控制器被装饰为anonymous，则跳过所有验证
     const anonymous = this.reflector.get(ANONYMOUS, context.getHandler());
     if (anonymous) {
       return true;
@@ -51,6 +56,15 @@ export class AuthGuard implements CanActivate {
     //将用户信息挂载到request
     request[REQUEST_KEY_USER_PROFILE] = userProfile;
 
+    //如果控制器被装饰为permissionOptional，则跳过权限验证
+    const permissionOptional = this.reflector.get(
+      PERMISSIONOPTIONAL,
+      context.getHandler()
+    );
+    if (permissionOptional) {
+      return true;
+    }
+
     //获取用户权限
     const perms = await this.authService.getPermsByIdFromCache(userProfile.uid);
 
@@ -60,7 +74,10 @@ export class AuthGuard implements CanActivate {
         path.replace(`/${this.configService.get("globalPrefix")}/`, "")
       )
     ) {
-      throw new HttpException("您没有权限访问!", HttpStatus.UNAUTHORIZED);
+      throw new ApiException({
+        code: ResultStatusCode.接口无权限,
+        message: "您没有权限访问!"
+      });
     }
 
     return true;

@@ -39,7 +39,7 @@ export class DatabaseSeeder extends Seeder {
       menuName: "管理员列表",
       menuType: MenuType.MENU,
       router: "/adminUser",
-      viewPath: "views/system/permission/user",
+      viewPath: "system/permission/user",
       icon: ""
     });
     const viewUserPerm = em.create(SysMenu, {
@@ -76,7 +76,7 @@ export class DatabaseSeeder extends Seeder {
       menuName: "菜单列表",
       menuType: MenuType.MENU,
       router: "/menu",
-      viewPath: "views/system/permission/menu",
+      viewPath: "system/permission/menu",
       icon: ""
     });
     const viewMenuPerm = em.create(SysMenu, {
@@ -113,7 +113,7 @@ export class DatabaseSeeder extends Seeder {
       menuName: "角色列表",
       menuType: MenuType.MENU,
       router: "/role",
-      viewPath: "views/system/permission/role",
+      viewPath: "system/permission/role",
       icon: ""
     });
     const viewRolePerm = em.create(SysMenu, {

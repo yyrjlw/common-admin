@@ -3,6 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@element-plus/icons-vue': ^2.0.10
   '@rushstack/eslint-patch': ^1.1.4
+  '@types/lodash': ^4.14.187
+  '@types/nprogress': ^0.2.0
   '@types/uuid': ^8.3.4
   '@vitejs/plugin-vue': ^3.1.2
   '@vitejs/plugin-vue-jsx': ^2.0.1
@@ -11,12 +13,15 @@ specifiers:
   '@vue/tsconfig': ^0.1.3
   autoprefixer: ^10.4.13
   axios: ^1.1.3
+  class-validator: ^0.13.2
   dayjs: ^1.11.6
   element-plus: ^2.2.19
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
+  lodash: ^4.17.21
   md5: ^2.3.0
   npm-run-all: ^4.1.5
+  nprogress: ^0.2.0
   pinia: ^2.0.23
   postcss: ^8.4.18
   prettier: ^2.7.1
@@ -35,9 +40,12 @@ specifiers:
 dependencies:
   '@element-plus/icons-vue': 2.0.10_vue@3.2.41
   axios: 1.1.3
+  class-validator: 0.13.2
   dayjs: 1.11.6
   element-plus: 2.2.19_vue@3.2.41
+  lodash: 4.17.21
   md5: 2.3.0
+  nprogress: 0.2.0
   pinia: 2.0.23_lrjaoqkmph6q2hmgd3qeuy6rom
   uuid: 9.0.0
   vue: 3.2.41
@@ -45,6 +53,8 @@ dependencies:
 
 devDependencies:
   '@rushstack/eslint-patch': 1.2.0
+  '@types/lodash': 4.14.187
+  '@types/nprogress': 0.2.0
   '@types/uuid': 8.3.4
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.1+vue@3.2.41
   '@vitejs/plugin-vue-jsx': 2.1.0_vite@3.2.1+vue@3.2.41
@@ -530,12 +540,15 @@ packages:
   /@types/lodash-es/4.17.6:
     resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
     dependencies:
-      '@types/lodash': 4.14.186
+      '@types/lodash': 4.14.187
     dev: false
 
-  /@types/lodash/4.14.186:
-    resolution: {integrity: sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==}
-    dev: false
+  /@types/lodash/4.14.187:
+    resolution: {integrity: sha512-MrO/xLXCaUgZy3y96C/iOsaIqZSeupyTImKClHunL5GrmaiII2VwvWmLBu2hwa0Kp0sV19CsyjtrTc/Fx8rg/A==}
+
+  /@types/nprogress/0.2.0:
+    resolution: {integrity: sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==}
+    dev: true
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
@@ -1131,6 +1144,13 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+  /class-validator/0.13.2:
+    resolution: {integrity: sha512-yBUcQy07FPlGzUjoLuUfIOXzgynnQPPruyK1Ge2B74k9ROwnle1E+NxLWnUv5OLU8hA/qL5leAE9XnXq3byaBw==}
+    dependencies:
+      libphonenumber-js: 1.10.14
+      validator: 13.7.0
+    dev: false
+
   /color-convert/1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
     dependencies:
@@ -1286,7 +1306,7 @@ packages:
       '@element-plus/icons-vue': 2.0.10_vue@3.2.41
       '@floating-ui/dom': 1.0.4
       '@popperjs/core': /@sxzz/popperjs-es/2.11.7
-      '@types/lodash': 4.14.186
+      '@types/lodash': 4.14.187
       '@types/lodash-es': 4.17.6
       '@vueuse/core': 9.4.0_vue@3.2.41
       async-validator: 4.2.5
@@ -2213,6 +2233,10 @@ packages:
       type-check: 0.4.0
     dev: true
 
+  /libphonenumber-js/1.10.14:
+    resolution: {integrity: sha512-McGS7GV/WjJ2KjfOGhJU1oJn29RYeo7Q+RpANRbUNMQ9gj5XArpbjurSuyYPTejFwbaUojstQ4XyWCrAzGOUXw==}
+    dev: false
+
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}
     engines: {node: '>=10'}
@@ -2413,6 +2437,10 @@ packages:
       shell-quote: 1.7.4
       string.prototype.padend: 3.1.3
     dev: true
+
+  /nprogress/0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+    dev: false
 
   /nth-check/2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -3153,6 +3181,11 @@ packages:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
     dev: true
+
+  /validator/13.7.0:
+    resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /vite/3.2.1_sass@1.55.0:
     resolution: {integrity: sha512-ADtMkfHuWq4tskJsri2n2FZkORO8ZyhI+zIz7zTrDAgDEtct1jdxOg3YsZBfHhKjmMoWLOSCr+64qrEDGo/DbQ==}

@@ -7,6 +7,7 @@ import {
   Logger
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
+import { ApiException } from "src/common/exception/api.exception";
 import { ResultMsg } from "src/models/result-msg";
 import { AuthService } from "src/service/auth.service";
 
@@ -19,7 +20,10 @@ export class TestController {
 
   @Get()
   async get() {
-    console.log(await this.authService.getPermsByIdFromCache(1));
+    throw new ApiException({
+      code: 123,
+      message: "asasa"
+    });
 
     return this.cacheManager.get("a");
   }

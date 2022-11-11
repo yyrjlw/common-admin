@@ -1,13 +1,18 @@
 <template>
   <div class="login h-full bg-[url('@/assets/login-bg.svg')] bg-100">
-    <div class="login-form-container mt-60 flex h-full flex-col items-center">
+    <div class="login-form-container flex flex-col items-center pt-60">
       <div class="header flex items-center pb-10">
         <img src="@/assets/images/logo.png" class="logo" width="50" />
         <div class="title ml-2 text-2xl font-bold">Common-Admin</div>
       </div>
-      <el-form :model="loginForm" size="large" class="w-96">
+      <el-form
+        :model="loginForm"
+        size="large"
+        class="w-96"
+        @keydown.enter="loginHandle"
+      >
         <el-input
-          v-model="loginForm.userName"
+          v-model.trim="loginForm.userName"
           class="mb-5"
           placeholder="请输入用户名"
           :prefix-icon="User"
@@ -15,14 +20,14 @@
         <el-input
           type="password"
           class="mb-5"
-          v-model="loginForm.password"
+          v-model.trim="loginForm.password"
           show-password
           placeholder="请输入密码"
           :prefix-icon="Lock"
         />
         <el-input
           class="mb-5"
-          v-model="loginForm.captcha"
+          v-model.trim="loginForm.captcha"
           placeholder="请输入验证码"
           :prefix-icon="MessageBox"
         >
@@ -35,7 +40,11 @@
             />
           </template>
         </el-input>
-        <el-button type="primary" class="w-full" @click="loginHandle"
+        <el-button
+          type="primary"
+          class="w-full"
+          @click="loginHandle"
+          :loading="isLoading"
           >登录</el-button
         >
       </el-form>
@@ -47,9 +56,13 @@
 import { reactive, ref } from "vue";
 import { User, Lock, MessageBox } from "@element-plus/icons-vue";
 import { getCaptchaImg } from "@/api/auth";
-import { useAdminStore } from "@/stores/admin";
+import { useAuthStore } from "@/stores/auth";
+import { cloneDeep } from "lodash";
+import { useRoute, useRouter } from "vue-router";
 
-const adminStore = useAdminStore();
+const adminStore = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 
 const imgForCaptCha = ref();
 const loadCaptchaImg = () =>
@@ -63,22 +76,30 @@ const loadCaptchaImg = () =>
 loadCaptchaImg();
 
 const loginForm = reactive({
-  userName: "",
-  password: "",
-  captcha: "",
+  userName: "admin",
+  password: "admin123",
+  captcha: "gerg",
   captchaID: "",
 });
 
+const isLoading = ref(false);
+
 const loginHandle = () => {
-  if (!loginForm.userName.trim() || !loginForm.password.trim()) {
+  if (!loginForm.userName || !loginForm.password) {
     return ElMessage.warning({ message: "用户名或密码不能为空!" });
   }
-  if (!loginForm.captcha.trim()) {
+  if (!loginForm.captcha) {
     return ElMessage.warning({ message: "请输入验证码!" });
   }
-  adminStore.login(loginForm).catch(() => {
-    loadCaptchaImg();
-  });
+  isLoading.value = true;
+  adminStore
+    .login(cloneDeep(loginForm))
+    .then(() => router.replace((route.query.redirect as string) ?? "/"))
+    .catch((err) => {
+      console.error(err);
+      loadCaptchaImg();
+    })
+    .finally(() => (isLoading.value = false));
 };
 </script>
 

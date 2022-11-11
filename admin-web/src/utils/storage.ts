@@ -22,7 +22,7 @@ export const getStorage = (key: string, storageType: storageType = "local") => {
   } else {
     result = sessionStorage.getItem(key);
   }
-  if (result === null) return "";
+  if (result === null) return null;
   try {
     return JSON.parse(result);
   } catch (error) {

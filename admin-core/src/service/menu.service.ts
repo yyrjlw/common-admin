@@ -1,4 +1,4 @@
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityRepository } from "@mikro-orm/mysql";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable } from "@nestjs/common";
 import SysMenu, { MenuType } from "src/models/entity/admin/sys-menu.entity";
@@ -18,5 +18,12 @@ export class MenuService {
     });
     perms.forEach((i) => result.push(...i.permissions.split(",")));
     return result;
+  }
+
+  async getMenus(roleID: number) {
+    return await this.sysmenuRepostory.find({
+      roles: roleID,
+      menuType: { $ne: MenuType.PERMISSION }
+    });
   }
 }
